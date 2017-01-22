@@ -23943,6 +23943,70 @@
 	    _createClass(AppleBasket, [{
 	        key: 'render',
 	        value: function render() {
+	            var state = this.props.state;
+
+
+	            var mockState = {
+	                isPicking: false,
+	                newAppleId: 1,
+	                apples: [{
+	                    id: 1,
+	                    weight: 235,
+	                    isEaten: true
+	                }, {
+	                    id: 2,
+	                    weight: 256,
+	                    isEaten: false
+	                }]
+	            };
+	            /**
+	             * 普通显示组件的state格式由组件开发人员自己约定即可，
+	             * 并在mockState 区域给出例子。当别人要使用你的显示组件时，
+	             * 必须根据你规定的格式传入state数据。
+	             * 在组件里面，我们一般会实现如下这样一个自动切换器，
+	             * 当组件的使用者在使用该组件时没有传入state, 就会显示内部的模拟state，为使用者带来预览效果。
+	             */
+	            if (state == undefined) {
+	                // 模拟数据
+	                state = mockState;
+	            }
+
+	            // 对state做显示级别的转化
+	            var stats = {
+	                appleNow: {
+	                    quantity: 0,
+	                    weight: 0
+	                },
+	                appleEaten: {
+	                    quantity: 0,
+	                    weight: 0
+	                }
+	            };
+
+	            var notEaten = [];
+	            state.apples.map(function (apple) {
+	                var selector = apple.isEaten ? 'appleEaten' : 'appleNow';
+	                stats[selector].quantity++;
+	                stats[selector].weight += apple.weight;
+
+	                if (apple.isEaten == false) {
+	                    notEaten.push(apple);
+	                }
+	            });
+
+	            var basketTipText = '';
+	            if (notEaten.length == 0) {
+	                basketTipText = _react2.default.createElement(
+	                    'div',
+	                    { className: 'appleList' },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'empty-tip' },
+	                        '\u82F9\u679C\u7BEE\u5B50\u7A7A\u7A7A\u5982\u4E5F'
+	                    )
+	                );
+	            }
+
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'appleBusket' },
@@ -23965,7 +24029,10 @@
 	                        _react2.default.createElement(
 	                            'div',
 	                            { className: 'content' },
-	                            '0\u4E2A\u82F9\u679C\uFF0C0\u514B'
+	                            stats.appleNow.quantity,
+	                            '\u4E2A\u82F9\u679C\uFF0C',
+	                            stats.appleNow.weight,
+	                            '\u514B'
 	                        )
 	                    ),
 	                    _react2.default.createElement(
@@ -23979,20 +24046,15 @@
 	                        _react2.default.createElement(
 	                            'div',
 	                            { className: 'content' },
-	                            '2\u4E2A\u82F9\u679C\uFF0C480\u514B'
+	                            stats.appleEaten.quantity,
+	                            '\u4E2A\u82F9\u679C\uFF0C',
+	                            stats.appleEaten.weight,
+	                            '\u514B'
 	                        )
 	                    )
 	                ),
 	                _react2.default.createElement(_AppItem2.default, null),
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'appleList' },
-	                    _react2.default.createElement(
-	                        'div',
-	                        { className: 'empty-tip' },
-	                        '\u82F9\u679C\u7BEE\u5B50\u7A7A\u7A7A\u5982\u4E5F'
-	                    )
-	                ),
+	                basketTipText,
 	                _react2.default.createElement(
 	                    'div',
 	                    { className: 'btn-div' },
@@ -24050,6 +24112,31 @@
 	    _createClass(AppItem, [{
 	        key: 'render',
 	        value: function render() {
+	            var _props = this.props,
+	                state = _props.state,
+	                actions = _props.actions;
+
+	            /**
+	             * 这个区域是 mock 数据区，也作为组件文档，请写清楚
+	             * 在组件发布时，请注释掉，提高性能
+	             */
+
+	            var mockState = {
+	                id: 1,
+	                weight: 256,
+	                isEaten: false
+	            };
+
+	            var mockActions = {
+	                eatApple: function eatApple(id) {
+	                    return console.log('eatApple ', id);
+	                }
+	            };
+
+	            // 启动模拟数据
+	            if (state == undefined) state = mockState;
+	            if (actions == undefined) actions = mockActions;
+
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'appleItem' },
@@ -24067,12 +24154,15 @@
 	                        _react2.default.createElement(
 	                            'div',
 	                            { className: 'name' },
-	                            '\u7EA2\u82F9\u679C - 1\u53F7'
+	                            '\u7EA2\u82F9\u679C - ',
+	                            state.id,
+	                            '\u53F7'
 	                        ),
 	                        _react2.default.createElement(
 	                            'div',
 	                            { className: 'weight' },
-	                            '265\u514B'
+	                            state.weight,
+	                            '\u514B'
 	                        )
 	                    )
 	                ),
@@ -24081,7 +24171,9 @@
 	                    { className: 'btn-div' },
 	                    _react2.default.createElement(
 	                        'button',
-	                        null,
+	                        { onClick: function onClick() {
+	                                return actions.eatApple(state.id);
+	                            } },
 	                        '\u5403\u6389'
 	                    )
 	                )
