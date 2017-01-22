@@ -6,6 +6,43 @@ import '../css/appleBasket.scss';
 class AppleBasket extends React.Component {
   
   render(){
+    let { state } = this.props;
+
+    let mockState = {
+        isPicking: false,
+        newAppleId: 1,
+        apples: [
+            {
+                id: 1,
+                weight: 235,
+                isEaten: true
+            },
+            {
+                id: 2,
+                weight: 256,
+                isEaten: false
+            }
+        ]
+    };
+    // 模拟数据
+    state = mockState;
+
+    // 对state做显示级别的转化
+    let stats = {
+        appleNow: {
+            quantity: 0,
+            weight: 0
+        },
+        appleEaten: {
+            quantity: 0,
+            weight: 0
+        }
+    };
+
+    state.apples.map(() => {
+
+    });
+
     return (
         <div className="appleBusket">
             <div className="title">苹果篮子</div>
